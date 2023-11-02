@@ -8,26 +8,58 @@ public class CharacterMovement : MonoBehaviour
     public float JumpSpeed = 500f;
 
     private Rigidbody2D _rigidbody;
+    private Animator _animator;
+    private SpriteRenderer _sprite;
+    AudioSource _jumpsound;
 
     private bool _isGrounded = false;
+    private bool _canJump = true;
 
     private float _XInput;
     private bool _isJumpPressed = false;
 
+    
+
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+        _sprite = GetComponent<SpriteRenderer>();
+        _jumpsound = GetComponent<AudioSource>();
+
     }
 
     void Update()
     {
         _XInput = Input.GetAxisRaw("Horizontal");
-        
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(_XInput == 0)
+        {
+            _animator.SetBool("IsWalking", false);
+        }
+
+        else
+        {
+            _animator.SetBool("IsWalking", true);
+            if (_XInput > 0)
+            {
+                _sprite.flipX = true;
+            }
+
+            else
+            {
+                _sprite.flipX = false;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded && _canJump)
         {
             _isJumpPressed = true;
+            _canJump = false;
+            _jumpsound.Play();
         }
+
+        
     }
 
     private void FixedUpdate()
@@ -49,6 +81,7 @@ public class CharacterMovement : MonoBehaviour
        if (collision.transform.tag == "Ground")
         {
             _isGrounded = true;
+            _canJump = true;
         }
     }
 }
