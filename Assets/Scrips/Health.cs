@@ -1,23 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using System;
+using UnityEngine.SceneManagement;
 
 
 public class Health : MonoBehaviour
 {
     public TMP_Text HealthText;
-
-    private int _health = 100;
+    
+    public int _health = 100;
     private int _maxHealth = 100;
 
     private SpriteRenderer _sprite;
+    public Animator _anime;
+    private Rigidbody2D _rigidbody;
 
     void Start()
     {
         DisplayHealth();
         _sprite = GetComponent<SpriteRenderer>();
+        _anime = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     IEnumerator FlashRed()
@@ -42,12 +47,28 @@ public class Health : MonoBehaviour
     {
         StartCoroutine(FlashRed());
         _health -= damage;
-
-        if(_health <= 0)
-        {
-            Destroy(gameObject);
-        }
         DisplayHealth();
+
+        if (_health <= 0)
+        {
+            if (gameObject.CompareTag("Player"))
+            {
+                Die();
+                Invoke("RestartLevel", 2f);
+            }
+
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+        
+    }
+
+    public void Die()
+    {
+        _rigidbody.bodyType = RigidbodyType2D.Static;
+        _anime.SetTrigger("Death");
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
@@ -55,14 +76,17 @@ public class Health : MonoBehaviour
         if (collider2D.gameObject.CompareTag("Life"))
         {
             Destroy(collider2D.gameObject);
-            _health += Mathf.Min(_maxHealth, _health);
+            int livesToAdd = 50;
+            int livesAvailable = _maxHealth - _health;
+            int livesGained = Mathf.Min(livesToAdd, livesAvailable);
+            _health += livesGained;
             DisplayHealth();
         }
     }
 
-
-    void Update()
+    private void RestartLevel()
     {
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    
 }
