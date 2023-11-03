@@ -8,6 +8,7 @@ public class CoinCollecting : MonoBehaviour
 {
     private int points = 0;
     public TMP_Text scoreText;
+    public AudioSource _coinCollect;
 
     private void Start()
     {
@@ -21,6 +22,11 @@ public class CoinCollecting : MonoBehaviour
             Destroy(collider2D.gameObject);
             points += 10;
             UpdateScoreText();
+
+            if(_coinCollect != null)
+            {
+                _coinCollect.Play();
+            }
         }
 
     }

@@ -10,7 +10,7 @@ public class CharacterMovement : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private SpriteRenderer _sprite;
-    AudioSource _jumpsound;
+    public AudioSource _jumpsound;
 
     private bool _isGrounded = false;
     private bool _canJump = true;

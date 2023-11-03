@@ -62,7 +62,7 @@ public class Health : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        
+
     }
 
     public void Die()
@@ -81,6 +81,18 @@ public class Health : MonoBehaviour
             int livesGained = Mathf.Min(livesToAdd, livesAvailable);
             _health += livesGained;
             DisplayHealth();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Water"))
+        {
+            if (gameObject.CompareTag("Player"))
+            {
+                Die();
+                Invoke("RestartLevel", 2f);
+            }
         }
     }
 
