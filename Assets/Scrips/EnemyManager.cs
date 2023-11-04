@@ -6,17 +6,6 @@ public class EnemyManager : MonoBehaviour
 {
 
     public int Damage = 20;
-    
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
